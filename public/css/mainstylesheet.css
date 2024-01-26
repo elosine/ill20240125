@@ -1,0 +1,131 @@
+body {
+  background-color: #adadb7;
+  font-family: 'Lato';
+  margin: 0;
+  padding: 0;
+}
+
+.btn {
+  letter-spacing: 1px;
+  padding: 8px 8px;
+  margin: 8px 8px;
+  border: none;
+  font-family: 'Lato';
+  font-size: 11px;
+  color: inherit;
+  background: none;
+  display: inline-block;
+  font-variant: small-caps;
+  outline: none;
+  position: absolute;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.btn-1 {
+  background: #cb4e4e;
+  color: #fff;
+  box-shadow: 0 6px #ab3c3c;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-transition: none;
+  -moz-transition: none;
+  transition: none;
+}
+
+.btn-1_inactive {
+  background: #708090;
+  color: #fff;
+  box-shadow: 0 6px #708090;
+  border-radius: 5px;
+  -webkit-transition: none;
+  -moz-transition: none;
+  transition: none;
+}
+
+.btn-1:hover {
+  box-shadow: 0 8px #17954c;
+  background: #24b662;
+  color: black;
+  top: -2px;
+}
+
+.btn-1:active {
+  box-shadow: 0 0 #ab3c3c;
+  top: 6px;
+}
+
+.btn-2 {
+  background: #fcad26;
+  color: #fff;
+  box-shadow: 0 6px #da9622;
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-transition: none;
+  -moz-transition: none;
+  transition: none;
+}
+
+.btn-2:hover {
+  box-shadow: 0 8px #da9622;
+  background: #fcad26;
+  color: black;
+  top: -2px;
+}
+
+.input__field--yoshiko {
+  position: absolute;
+  padding: 3px 3px;
+  border-radius: 0;
+  color: #000000;
+  background-color: #a3d39c;
+  border: 0px solid transparent;
+}
+
+/* https://css-tricks.com/almanac/properties/o/outline/ */
+/* https://www.w3schools.com/css/css_outline.asp */
+.input__field--yoshiko:focus {
+  outline-width: 2px;
+  outline-style: inset;
+  outline-color: orange;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  overflow: scroll;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  /* padding: 12px 16px; */
+  padding-top: 11px;
+  /* padding-bottom: 7px; */
+  padding-left: 14px;
+  padding-right: 8px;
+  text-decoration: none;
+  display: block;
+  font-family: 'Lato';
+  font-size: 13px;
+  font-variant: small-caps;
+  height: 28px;
+}
+
+/* Change color of dropdown links on hover */
+/* .dropdown-content a:hover {background-color: #ddd} */
+.dropdown-content a:hover {
+  background-color: #24b662
+}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {
+  display: block;
+}
+
+@font-face { font-family: Lato; src: url('../../fonts/Lato/Lato-Regular.ttf'); }

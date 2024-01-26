@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.2"
+   width="5.4110875mm"
+   height="26.676805mm"
+   viewBox="0 0 3.079207 15.18057"
+   id="svg340"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs340" />
+  <style
+     type="text/css"
+     id="style1"><![CDATA[
+tspan { white-space: pre; }
+]]></style>
+  <!-- Page: 1/1 -->
+  <g
+     id="g342"
+     transform="rotate(180,104.52435,6.5363461)">
+    <g
+       transform="translate(205.96948,0.0938734)"
+       id="g281-4">
+      <path
+         transform="scale(0.0066,-0.0066)"
+         d="m 0,-56 v 91 c 0,12 10,21 22,21 h 43 c 164,0 281,136 377,272 10,14 32,-1 22,-15 C 361,168 242,-56 65,-56 Z"
+         fill="currentColor"
+         id="path280-0" />
+    </g>
+    <g
+       transform="translate(205.96948,10.870948)"
+       id="g282-1">
+      <path
+         transform="scale(0.0066,-0.0066)"
+         d="m 0,56 h 65 c 177,0 296,-224 399,-369 10,-14 -12,-29 -22,-15 C 346,-192 229,-56 65,-56 H 22 c -12,0 -22,9 -22,21 z"
+         fill="currentColor"
+         id="path281-7" />
+    </g>
+    <rect
+       x="205.96948"
+       y="0.42017338"
+       width="0.44999999"
+       height="10.087687"
+       ry="0.0000"
+       fill="currentColor"
+       id="rect282-1"
+       style="stroke-width:1.21688" />
+  </g>
+</svg>
