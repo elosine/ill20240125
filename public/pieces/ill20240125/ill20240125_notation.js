@@ -57,6 +57,7 @@ function animationEngine(timestamp) {
 
 function update() {
   updateScrollingCsrs();
+  updateSquares();
   // updateLoops();
 }
 //#endef Animation Engine
@@ -64,13 +65,20 @@ function update() {
 //#ef INIT
 function init() {
   calcScrollingCsrs();
+  calcSquareTimes();
+  console.log(barsTiming);
   // calcLoopsData();
   // calcLoopsFrameArray();
   makeCanvas();
   mkStaffRects();
+  drawBars();
+
   // makeLoopBrackets();
   // makeLoopCursors();
+
   makeScrollingCursors();
+
+  mkSquares();
   let ts_Date = new Date(TS.now());
   let tsNowEpochTime_MS = ts_Date.getTime();
   epochTimeOfLastFrame_MS = tsNowEpochTime_MS;
@@ -167,7 +175,6 @@ tempos.forEach((tempoArr, i) => {
   //calc acceleration from initial tempo and final tempo
   // a = (v2 - u2) / 2s ; v=finalVelocity, u=initialVelocity, s=totalDistance
   let tAccel = (Math.pow(fTempoPxPerFrame, 2) - Math.pow(iTempoPxPerFrame, 2)) / (2 * TOTAL_NUM_PX_IN_SCORE);
-  // console.log('tempo ' + i + ' acceleration: ' + tAccel);
   td['accel'] = tAccel;
   // Calculate total number of frames from acceleration and distance
   // t = sqrRoot( (2L/a) ) ; L is total pixels
@@ -177,7 +184,6 @@ tempos.forEach((tempoArr, i) => {
   } else {
     totalDurFrames = Math.round((fTempoPxPerFrame - iTempoPxPerFrame) / tAccel);
   }
-  // console.log('Total Frames, tempo ' + i + ' : ' + totalDurFrames);
   td['totalDurFrames'] = totalDurFrames;
   tempoConsts.push(td);
 });
@@ -408,8 +414,8 @@ function updateLoops() {
 //#endef Loops
 
 //#ef Bars
-let barY = 35;
-let barH = 50;
+let barY = 3;
+let barH = 25;
 let bars = [];
 const BAR_CLRS = [clr_limeGreen, clr_mustard, clr_brightBlue, clr_neonMagenta];
 
@@ -417,70 +423,95 @@ let barsTiming = [{
   startbt: 5,
   endbt: 7.5,
   motivenum: 0
-}, {
-  startbt: 9,
-  endbt: 10,
-  motivenum: 1
-}, {
-  startbt: 13,
-  endbt: 16.29,
-  motivenum: 2
-}, {
-  startbt: 18,
-  endbt: 118.5,
-  motivenum: 3
+//} , {
+//   startbt: 9,
+//   endbt: 10,
+//   motivenum: 1
+// }, {
+//   startbt: 13,
+//   endbt: 16.29,
+//   motivenum: 2
+// }, {
+//   startbt: 18,
+//   endbt: 24.5,
+//   motivenum: 3
 }];
-
-function drawBars() {
+let barsConst = []; //tx ty tw
+function makeBars() {
   barsTiming.forEach((barObj, barIx) => {
-    tbr = [];
     //find line number for start and end
     let tleftXAbs = barObj.startbt * PX_PER_BEAT;
     let tleftX = Math.round(tleftXAbs) % Math.round(NOTATION_LINE_LENGTH_PX);
     let tleftLineNum = Math.floor(tleftXAbs / NOTATION_LINE_LENGTH_PX);
-    let trightXAbs = barObj.startbt * PX_PER_BEAT;
+    let trightXAbs = barObj.endbt * PX_PER_BEAT;
     let trightX = Math.round(trightXAbs) % Math.round(NOTATION_LINE_LENGTH_PX);
     let trightLineNum = Math.floor(trightXAbs / NOTATION_LINE_LENGTH_PX);
+
+    barsTiming[barIx]['absXStart'] = tleftXAbs;
+    barsTiming[barIx]['absXEnd'] = trightXAbs;
     //if linenums are not equal start at x=0 to right beat
-    let ty, tx1, tw;
     if (tleftLineNum == trightLineNum) {
-      tx1 = tleftX;
-      tw = trightX - tleftX;
-      ty = barY + ((NOTATION_H + GAP_BTWN_NOTATION_LINES) * tleftLineNum);
-      let tBar = mkSvgRect({
-        svgContainer: canvas.svg,
-        x: tx1,
-        y: ty,
-        w: barLen,
-        h: barH,
-        fill: BAR_CLRS[barObj.motivenum],
-        stroke: 'none',
-        strokeW: 0,
-        roundR: 0
-      });
-      tBar.setAttributeNS(null, 'display', 'yes');
-      tbr.push tBar;
-      bars.push(tbr);
-    } else {
-      tx1 = tleftX;
-      tw = trightX - tleftX;
-      ty = barY + ((NOTATION_H + GAP_BTWN_NOTATION_LINES) * tleftLineNum);
-      let tBar = mkSvgRect({
-        svgContainer: canvas.svg,
-        x: tx1,
-        y: ty,
-        w: barLen,
-        h: barH,
-        fill: BAR_CLRS[barObj.motivenum],
-        stroke: 'none',
-        strokeW: 0,
-        roundR: 0
-      });
-      tBar.setAttributeNS(null, 'display', 'yes');
-      tbr.push tBar;
-      bars.push(tbr);
+      let tx = tleftX;
+      let tw = trightX - tleftX;
+      let ty = barY + ((NOTATION_H + GAP_BTWN_NOTATION_LINES) * tleftLineNum);
+
+    } else { //if bar spills to next line
+      let tx1 = tleftX;
+      let tw1 = WORLD_W - tleftX;
+      let ty1 = barY + ((NOTATION_H + GAP_BTWN_NOTATION_LINES) * tleftLineNum);
+
+      let tx2 = 0;
+      let tw2 = trightX;
+      let ty2 = barY + ((NOTATION_H + GAP_BTWN_NOTATION_LINES) * trightLineNum);
+
     }
   });
+}
+
+function drawBars() {
+  tbr = [];
+
+  let tBar = mkSvgRect({
+    svgContainer: canvas.svg,
+    x: tx,
+    y: ty,
+    w: tw,
+    h: barH,
+    fill: BAR_CLRS[barObj.motivenum],
+    stroke: 'none',
+    strokeW: 0,
+    roundR: 0
+  });
+  tBar.setAttributeNS(null, 'display', 'yes');
+  tbr.push(tBar);
+  bars.push(tbr);
+  let tBar1 = mkSvgRect({
+    svgContainer: canvas.svg,
+    x: tx1,
+    y: ty1,
+    w: tw1,
+    h: barH,
+    fill: BAR_CLRS[barObj.motivenum],
+    stroke: 'none',
+    strokeW: 0,
+    roundR: 0
+  });
+  tBar1.setAttributeNS(null, 'display', 'yes');
+  tbr.push(tBar1);
+  let tBar2 = mkSvgRect({
+    svgContainer: canvas.svg,
+    x: tx2,
+    y: ty2,
+    w: tw2,
+    h: barH,
+    fill: BAR_CLRS[barObj.motivenum],
+    stroke: 'none',
+    strokeW: 0,
+    roundR: 0
+  });
+  tBar2.setAttributeNS(null, 'display', 'yes');
+  tbr.push(tBar2);
+  bars.push(tbr);
 }
 
 function moveBars() {
@@ -491,76 +522,109 @@ function moveBars() {
 }
 //#endef Bars
 
-//#ef Pie
-function calcPieTimes() {
-  barsTimingFrames.forEach((barAr, bix) => {
-    let tBarFrms = barAr[0];
-    let tRestFrms = barAr[1];
-    let degPerFrame = 360 / tBarFrms;
-    for (var i = 0; i < tBarFrms; i++) {
-      let td = {};
-      td['clr'] = TEMPO_COLORS[bix % TEMPO_COLORS.length];
-      td['deg'] = degPerFrame * i;
-      pieTimingPerFrame.push(td);
+//#ef Squares
+let squareTimingFramesPerTempo = [];
+let sqrH = 15;
+let squares = [];
+
+function calcSquareTimes() {
+  tempoConsts.forEach((tempoObj, tempoIx) => { //run for each tempo
+    let frameArray = [];
+    let tNumFrames = tempoObj.totalDurFrames;
+    //populate framearray with x=bottom
+    for (var i = 0; i < tNumFrames; i++) {
+      let tmotiveAr = [];
+      for (var j = 0; j < 4; j++) {
+        let td = {};
+        td['y'] = NOTATION_H - (sqrH * (j + 1)) - 2;
+        td['h'] = sqrH;
+        tmotiveAr.push(td);
+      }
+      frameArray.push(tmotiveAr);
     }
-    for (var i = 0; i < tRestFrms; i++) {
-      let td = {};
-      td['clr'] = TEMPO_COLORS[bix % TEMPO_COLORS.length];
-      td['deg'] = 0;
-      pieTimingPerFrame.push(td);
-    }
+    //every bar find frame for startx and end x
+    barsTiming.forEach((barObj, barIx) => {
+      let tStartX = barObj.absXStart;
+      console.log(tStartX);
+      let tEndX = barObj.absXEnd;
+      let tMotiveNum = barObj.motivenum;
+      let tStartFrm, tEndFrm;
+      for (var frmIx = 1; frmIx < tempoObj.frameArray.length; frmIx++) {
+        let tThisFrmX = tempoObj.frameArray[frmIx].absX;
+        let tLastFrmX = tempoObj.frameArray[frmIx - 1].absX;
+        //troubleshoot here
+        // console.log(tStartX + ' '+tThisFrmX+ ' '+tLastFrmX);
+        if (tStartX <= tThisFrmX && tStartX >= tLastFrmX) {
+          tStartFrm = frmIx;
+        }
+        if (tEndX <= tThisFrmX && tEndX >= tLastFrmX) {
+          tEndFrm = frmIx;
+        }
+      }
+      let tNumFrmsThisBar = tEndFrm - tStartFrm;
+      let tSqrInc = sqrH / tNumFrmsThisBar;
+      for (var i = 0; i < tNumFrmsThisBar; i++) {
+        let tiy = tempoObj.frameArray[i + tStartFrm].y +  NOTATION_H - (sqrH * (i + 1)) - 2;
+        frameArray[i + tStartFrm][tMotiveNum]['h'] = tSqrInc * i;
+        frameArray[i + tStartFrm][tMotiveNum]['y'] = tiy + (tSqrInc * i);
+      }
+    });
+    squareTimingFramesPerTempo.push(frameArray);
   });
 }
 
-function makePie() {
-  pie = mkSvgArc({
-    svgContainer: canvas.svg,
-    x: PIEX,
-    y: PIEY,
-    radius: PIERAD,
-    startAngle: 0,
-    endAngle: 359,
-    fill: TEMPO_COLORS[0],
-    stroke: 'none',
-    strokeW: 0,
-    strokeCap: 'round' //square;round;butt
-  });
-  pie.setAttributeNS(null, 'display', 'yes');
-  pieOutline = mkSvgArc({
-    svgContainer: canvas.svg,
-    x: PIEX,
-    y: PIEY,
-    radius: PIERAD,
-    startAngle: 0,
-    endAngle: 359,
-    fill: 'none',
-    stroke: clr_neonMagenta,
-    strokeW: 2,
-    strokeCap: 'round' //square;round;butt
-  });
-  pieOutline.setAttributeNS(null, 'display', 'yes');
-}
-
-function movePie() {
-  let pieClock = FRAMECOUNT - LEADIN_FRAMES;
-  if (pieClock >= 0) {
-    let endAngle = pieTimingPerFrame[pieClock].deg;
-    let tClr = pieTimingPerFrame[pieClock].clr
-    let startAngle = 0;
-    let start = polarToCartesian(PIEX, PIEY, PIERAD, endAngle);
-    let end = polarToCartesian(PIEX, PIEY, PIERAD, startAngle);
-    let arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
-    let d = [
-      "M", start.x, start.y,
-      "A", PIERAD, PIERAD, 0, arcSweep, 0, end.x, end.y,
-      "L", PIEX, PIEY,
-      "L", start.x, start.y
-    ].join(" ");
-    pie.setAttributeNS(null, "d", d); //describeArc makes 12'0clock =0degrees
-    pie.setAttributeNS(null, "fill", tClr);
+function mkSquares() {
+  for (var j = 0; j < tempos.length; j++) {
+    let tsqar = [];
+    for (var i = 0; i < 4; i++) {
+      let td = {};
+      let tRect = mkSvgRect({
+        svgContainer: canvas.svg,
+        x: -sqrH,
+        y: NOTATION_H - (sqrH * (i + 1)) - 2,
+        w: sqrH,
+        h: sqrH,
+        fill: BAR_CLRS[i],
+        stroke: BAR_CLRS[i],
+        strokeW: 2,
+        roundR: 0
+      });
+      let tOutline = mkSvgRect({
+        svgContainer: canvas.svg,
+        x: -sqrH,
+        y: NOTATION_H - (sqrH * (i + 1)) - 2,
+        w: sqrH,
+        h: sqrH,
+        fill: 'none',
+        stroke: BAR_CLRS[i],
+        strokeW: 2,
+        roundR: 0
+      });
+      td['sqr'] = tRect;
+      td['ol'] = tOutline;
+      tsqar.push(td);
+    }
+    squares.push(tsqar);
   }
 }
-//#endef Pie
+
+function updateSquares() {
+  totalNumFramesPerTempo.forEach((numFrames, tempoIx) => {
+    let currFrame = FRAMECOUNT % numFrames;
+    let tx = tempoConsts[tempoIx].frameArray[currFrame].x - sqrH;
+    for (var i = 0; i < 4; i++) {
+      let ty = squareTimingFramesPerTempo[tempoIx][currFrame][i].y; //trouble shoot here
+      let th = squareTimingFramesPerTempo[tempoIx][currFrame][i].h;
+      squares[tempoIx][i].sqr.setAttributeNS(null, 'x', tx);
+      squares[tempoIx][i].sqr.setAttributeNS(null, 'y', ty);
+      squares[tempoIx][i].sqr.setAttributeNS(null, 'h', th);
+      squares[tempoIx][i].ol.setAttributeNS(null, 'x', tx);
+      squares[tempoIx][i].ol.setAttributeNS(null, 'y', ty);
+      squares[tempoIx][i].ol.setAttributeNS(null, 'h', th);
+    }
+  });
+}
+//#endef Squares
 
 
 
