@@ -1,27 +1,27 @@
 //#ef NOTES
 /*
-Resize loop brackets
-Loops w/squares
+fix loops
+Fix Else in calcBars to split a bar
 */
 //#endef NOTES
 
 //#ef General Variables
 const TEMPO_COLORS = [clr_limeGreen, clr_mustard, clr_brightBlue, clr_brightOrange, clr_lavander, clr_darkRed2, clr_brightGreen, clr_lightGrey, clr_neonMagenta, clr_plum, clr_blueGrey, clr_lightGrey, clr_lightGreen];
 //Dimensions
-const NOTATION_H = 160;
+const NOTATION_H = 120;
 const GAP_BTWN_NOTATION_LINES = 3;
 const VERT_DISTANCE_BETWEEN_LINES = NOTATION_H + GAP_BTWN_NOTATION_LINES;
-const NUM_NOTATION_LINES = 3;
+const NUM_NOTATION_LINES = 4;
 let WORLD_W = 945;
 let WORLD_H = (NOTATION_H * NUM_NOTATION_LINES) + (GAP_BTWN_NOTATION_LINES * (NUM_NOTATION_LINES - 1));
 const NOTATION_LINE_LENGTH_PX = WORLD_W;
 //Timing
-const LEADIN_SEC = 0;
+const LEADIN_SEC = 3;
 const FRAMERATE = 60;
 let FRAMECOUNT = -LEADIN_SEC * FRAMERATE;
 const MS_PER_FRAME = 1000.0 / FRAMERATE;
-const PX_PER_BEAT = 40;
-const PX_PER_SEC = 50;
+const PX_PER_BEAT = 30;
+const PX_PER_SEC = 30;
 const TOTAL_NUM_PX_IN_SCORE = NOTATION_LINE_LENGTH_PX * NUM_NOTATION_LINES;
 const BEATS_PER_LINE = WORLD_W / PX_PER_BEAT;
 let animationIsGo = false;
@@ -258,20 +258,20 @@ function updateScrollingCsrs() {
 //Loops
 let totalNumFramesPerLoop = [];
 let loops = [{
-  beatA: 13.6,
-  beatB: 18.5,
+  beatA: 22,
+  beatB: 30,
   tempoIx: 1
 }, {
-  beatA: 33,
-  beatB: 38,
+  beatA: 48,
+  beatB: 54,
   tempoIx: 6
 }, {
-  beatA: 50.25,
-  beatB: 54.2,
+  beatA: 72,
+  beatB: 90,
   tempoIx: 3
 }, {
-  beatA: 59.1,
-  beatB: 67.9,
+  beatA: 99,
+  beatB: 117,
   tempoIx: 2
 }];
 loops.forEach((loopObj, loopIx) => {
@@ -388,89 +388,89 @@ let bars = [];
 const BAR_CLRS = [clr_limeGreen, clr_mustard, clr_brightBlue, clr_neonMagenta];
 
 let barsTiming = [{
-  startbt: 5,
+  startbt: 2,
   endbt: 7.5,
   motivenum: 0
 }, {
-  startbt: 10,
-  endbt: 11.5,
+  startbt: 11.4,
+  endbt: 15.5,
   motivenum: 1
 }, {
-  startbt: 14,
-  endbt: 16.29,
+  startbt: 20,
+  endbt: 25.29,
   motivenum: 2
-}, {
-  startbt: 21,
-  endbt: 23.5,
-  motivenum: 3
-}, {
-  startbt: 25,
-  endbt: 25.8,
-  motivenum: 1
 }, {
   startbt: 28,
-  endbt: 30.25,
+  endbt: 30.5,
   motivenum: 3
 }, {
-  startbt: 34,
-  endbt: 35,
-  motivenum: 0
+  startbt: 35,
+  endbt: 42.5,
+  motivenum: 1
 }, {
-  startbt: 36.5,
-  endbt: 37,
-  motivenum: 2
-}, {
-  startbt: 38.5,
-  endbt: 42,
-  motivenum: 0
-}, {
-  startbt: 43.5,
-  endbt: 44.25,
+  startbt: 44,
+  endbt: 46.25,
   motivenum: 3
 }, {
-  startbt: 48.5,
-  endbt: 52,
+  startbt: 48,
+  endbt: 51.5,
   motivenum: 0
 }, {
-  startbt: 53.5,
-  endbt: 55,
+  startbt: 56,
+  endbt: 61.5,
   motivenum: 2
 }, {
-  startbt: 57.5,
-  endbt: 59,
-  motivenum: 1
+  startbt: 65,
+  endbt: 67,
+  motivenum: 0
 }, {
-  startbt: 60.5,
-  endbt: 61.3,
+  startbt: 68.5,
+  endbt: 75,
   motivenum: 3
 }, {
-  startbt: 62.5,
-  endbt: 63.5,
-  motivenum: 2
-}, {
-  startbt: 64.25,
-  endbt: 65,
-  motivenum: 1
-}, {
-  startbt: 65.5,
-  endbt: 66,
+  startbt: 77.25,
+  endbt: 80,
   motivenum: 0
 }, {
-  startbt: 66.25,
-  endbt: 66.5,
+  startbt: 85,
+  endbt: 92,
+  motivenum: 2
+}, {
+  startbt: 97,
+  endbt: 98.5,
+  motivenum: 1
+}, {
+  startbt: 101,
+  endbt: 103,
+  motivenum: 3
+}, {
+  startbt: 106,
+  endbt: 109.5,
+  motivenum: 2
+}, {
+  startbt: 111.5,
+  endbt: 114,
+  motivenum: 1
+}, {
+  startbt: 115.5,
+  endbt: 117,
   motivenum: 0
 }, {
-  startbt: 67,
-  endbt: 67.5,
-  motivenum: 2
+  startbt: 118,
+  endbt: 119,
+  motivenum: 0
 }, {
-  startbt: 68.25,
-  endbt: 69,
+  startbt: 120,
+  endbt: 125.8,
   motivenum: 2
-}, {
-  startbt: 69.75,
-  endbt: 70.5,
-  motivenum: 1
+// }, {
+//   startbt: 68.25,
+//   endbt: 69,
+//   motivenum: 2
+// }, {
+//   startbt: 69.75,
+//   endbt: 70.5,
+//   motivenum: 1
 }];
 
 function calcBars() {
@@ -505,6 +505,7 @@ function calcBars() {
       td1['y'] = ty1;
       td1['w'] = tw1;
       tbar.push(td1);
+      let td2 = {};
       let tx2 = 0;
       let tw2 = trightX;
       let ty2 = barY + ((NOTATION_H + GAP_BTWN_NOTATION_LINES) * trightLineNum);
@@ -544,8 +545,9 @@ function drawBars() {
 
 //#ef Squares
 let squareTimingFramesPerTempo = [];
-let sqrH = 29;
-let sqrW = 13;
+let numSqrs = 4;
+let sqrH = ((NOTATION_H*0.75)-5) /numSqrs;
+let sqrW = 11;
 let squares = [];
 
 function calcSquareTimes() {
