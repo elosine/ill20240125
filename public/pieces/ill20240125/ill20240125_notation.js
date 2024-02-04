@@ -86,7 +86,7 @@ function init() {
 
 //#ef Canvas
 let canvas = {};
-let panelTitle = "Interactive Looping Line 20240112";
+let panelTitle = "Interactive Looping Line 20240125";
 const staffRects = [];
 
 function makeCanvas() {
